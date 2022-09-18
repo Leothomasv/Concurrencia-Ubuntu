@@ -16,7 +16,7 @@ int main(int argc, char *argv[]){
     pthread_t * thread_cliente;
 
     long thread;
-    int thread_count = 10;
+    int thread_count = 100;
 
     thread_panadero = malloc(sizeof(pthread_t) * thread_count);
     thread_cliente = malloc(sizeof(pthread_t) * thread_count);
@@ -29,8 +29,8 @@ int main(int argc, char *argv[]){
 
     for (thread = 0; thread < thread_count; thread++)
     {
-        pthread_create(&thread_panadero[thread], NULL, hornear, NULL);
-        pthread_create(&thread_cliente[thread], NULL, comprar, NULL);
+        pthread_create(&thread_panadero[thread], NULL, (void*)hornear, NULL);
+        pthread_create(&thread_cliente[thread], NULL, (void*)comprar, NULL);
     }
 
     for (thread = 0; thread < thread_count; thread++)
@@ -49,7 +49,7 @@ void hornear(){
     printf("Pastelero horneando mas pasteles. \n");
     if(Cantidad_Pasteles < 50){
         Cantidad_Pasteles++;
-        sleep(2);
+        sleep(1);
     }
     printf("Pasteles disponibles: %d \n" , Cantidad_Pasteles);
     pthread_mutex_unlock(&lock);
@@ -60,11 +60,11 @@ void comprar(){
         printf("No hay pasteles para comprar. \n");
         return;
     }else{
-         pthread_mutex_lock(&lock);
-         printf("Cliente comprando pastel. \n");
-         Cantidad_Pasteles --;
-         sleep(2);
-         printf("Pasteles disponibles: %d \n" , Cantidad_Pasteles);
-         pthread_mutex_unlock(&lock);
+        pthread_mutex_lock(&lock);
+        printf("Cliente comprando pastel. \n");
+        Cantidad_Pasteles --;
+        sleep(1);
+        printf("Pasteles disponibles: %d \n" , Cantidad_Pasteles);        
+        pthread_mutex_unlock(&lock);
     }
 }
